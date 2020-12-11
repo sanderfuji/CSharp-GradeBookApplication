@@ -15,10 +15,12 @@ namespace GradeBook.GradeBooks
 
         public string Name { get; set; }
         public List<Student> Students { get; set; }
+        public bool isWeighted { get; set; }
 
-        public BaseGradeBook(string name)
+        public BaseGradeBook(string name, bool isweighted)
         {
             Name = name;
+            isWeighted = isweighted;
             Students = new List<Student>();
         }
 
@@ -106,22 +108,29 @@ namespace GradeBook.GradeBooks
             }
         }
 
-        public virtual double GetGPA(char letterGrade, StudentType studentType)
+        public virtual int GetGPA(char letterGrade, StudentType studentType)
         {
+            int score = 0;
+
+            if (this.isWeighted)
+            {
+                score += 1;
+            }
+
             switch (letterGrade)
             {
                 case 'A':
-                    return 4;
+                    return score + 4;
                 case 'B':
-                    return 3;
+                    return score + 3;
                 case 'C':
-                    return 2;
+                    return score + 2;
                 case 'D':
-                    return 1;
+                    return score + 1;
                 case 'F':
-                    return 0;
+                    return score;
             }
-            return 0;
+            return score;
         }
 
         public virtual void CalculateStatistics()
