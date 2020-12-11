@@ -15,13 +15,13 @@ namespace GradeBook.GradeBooks
 
         public string Name { get; set; }
         public List<Student> Students { get; set; }
-        public bool isWeighted { get; set; }
+        public bool IsWeighted { get; set; }
 
-        public BaseGradeBook(string name, bool isweighted)
+        public BaseGradeBook(string name, bool isWeighted)
         {
             Name = name;
-            isWeighted = isweighted;
             Students = new List<Student>();
+            IsWeighted = isWeighted;
         }
 
         public void AddStudent(Student student)
@@ -108,30 +108,38 @@ namespace GradeBook.GradeBooks
             }
         }
 
-        public virtual int GetGPA(char letterGrade, StudentType studentType)
+        public virtual double GetGPA(char letterGrade, StudentType studentType)
         {
-            int score = 0;
-
-            if (this.isWeighted)
-            {
-                score += 1;
-            }
-
+            var gpa = 0;
             switch (letterGrade)
             {
                 case 'A':
-                    return score + 4;
+                    return 4;
+                    gpa = 4;
+                    break;
                 case 'B':
-                    return score + 3;
+                    return 3;
+                    gpa = 3;
+                    break;
                 case 'C':
-                    return score + 2;
+                    return 2;
+                    gpa = 2;
+                    break;
                 case 'D':
-                    return score + 1;
+                    return 1;
                 case 'F':
-                    return score;
+                    return 0;
+                    gpa = 1;
+                    break;
             }
-            return score;
+            return 0;
+
+            if (IsWeighted && (studentType == StudentType.Honors || studentType == StudentType.DualEnrolled))
+                gpa++;
+
+            return gpa;
         }
+
 
         public virtual void CalculateStatistics()
         {
@@ -274,7 +282,7 @@ namespace GradeBook.GradeBooks
                              from type in assembly.GetTypes()
                              where type.FullName == "GradeBook.GradeBooks.StandardGradeBook"
                              select type).FirstOrDefault();
-            
+
             return JsonConvert.DeserializeObject(json, gradebook);
         }
     }
