@@ -13,12 +13,39 @@ namespace GradeBook.GradeBooks
             Type = Enums.GradeBookType.Ranked;
         }
 
+        public override void CalculateStatistics()
+        {
+            if (Students.Count() < 5)
+            {
+                Console.WriteLine("Ranked grading requires at least 5 students with grades in order to properly calculate a student's overall grade.");
+
+                return;
+            } else
+            {
+                base.CalculateStatistics();
+            }
+        }
+
+        public override void CalculateStudentStatistics()
+        {
+            if (Students.Count() < 5)
+            {
+                Console.WriteLine("Ranked grading requires at least 5 students with grades in order to properly calculate a student's overall grade.");
+
+                return;
+            }
+            else
+            {
+                base.CalculateStatistics();
+            }
+        }
+
         public override char GetLetterGrade(double averageGrade)
         {
             if (Students.Count < 5)
                 throw new InvalidOperationException("Ranked grading requires at least 5 students.");
 
-            var threshold = (int) Math.Ceiling(Students.Count * 0.2); // 20% precent of total num of students
+            var threshold = (int)Math.Ceiling(Students.Count * 0.2); // 20% precent of total num of students
             // For loop that decides higher or lower than input would work as well
             var grades = Students.OrderByDescending(e => e.AverageGrade).Select(e => e.AverageGrade).ToList();
 
